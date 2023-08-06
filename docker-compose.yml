@@ -29,4 +29,4 @@ services:
       - ./robot_localization/config.yaml:/opt/ros/humble/share/robot_localization/params/ukf.yaml
     restart: always
     network_mode: "host"
-    command: ros2 launch septentrio_gnss_driver rover_node.py
+    command: ros2 launch robot_localization ukf.launch.py
