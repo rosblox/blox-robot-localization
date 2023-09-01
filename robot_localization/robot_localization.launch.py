@@ -23,17 +23,14 @@ import pathlib
 import launch.actions
 from launch.actions import DeclareLaunchArgument
 
+from launch_ros.actions import Node
+
+
 def generate_launch_description():
 
-    map_transform_node = launch_ros.actions.Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='map_transform',
-        output='screen',
-        arguments = "--x 1 --y 0 --z 0 --roll 0 --pitch 0 --yaw 0 --frame-id map --child-frame-id odom".split(' '),
-        )
+    pkg_share = get_package_share_directory('robot_localization')
 
-    gnss_transform_node = launch_ros.actions.Node(
+    gnss_transform_node = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         name='gnss_transform',
@@ -41,8 +38,7 @@ def generate_launch_description():
         arguments = "--x 0 --y 0 --z 1.0 --roll 0 --pitch 0 --yaw 0 --frame-id base_link --child-frame-id gnss_link".split(' '),
         )
 
-
-    imu_transform_node = launch_ros.actions.Node(
+    imu_transform_node = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         name='imu_transform',
@@ -50,13 +46,19 @@ def generate_launch_description():
         arguments = "--x 0 --y 0 --z 0.5 --roll 0 --pitch 0 --yaw 0 --frame-id base_link --child-frame-id imu_link".split(' '),
         )
 
+    map_transform_node = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='map_transform',
+        output='screen',
+        arguments = "--x 1 --y 0 --z 0 --roll 0 --pitch 0 --yaw 0 --frame-id map --child-frame-id odom".split(' '),
+        )
 
-    navsat_transform_node = launch_ros.actions.Node(
+    navsat_transform_node = Node(
         package='robot_localization',
         executable='navsat_transform_node',
         name='navsat_transform_node',
         output='screen',
-        respawn=True,
         parameters=[{
             "magnetic_declination_radians": 0.0,
             "yaw_offset": 0.0,
@@ -67,15 +69,13 @@ def generate_launch_description():
             "broadcast_utm_transform": False,
         }])
 
-
-    ukf_localization_node = launch_ros.actions.Node(
+    ukf_localization_node = Node(
         package='robot_localization',
         executable='ukf_node',
         name='ukf_node',
         output='screen',
         respawn=True,
-        parameters=[os.path.join(get_package_share_directory("robot_localization"), 'params', 'ukf.yaml')],
-        )
+        parameters=[os.path.join(pkg_share, 'params/ukf.yaml')])
 
 
     return LaunchDescription([
