@@ -32,13 +32,13 @@ def generate_launch_description():
         output='screen',
         arguments = "--x 1 --y 0 --z 0 --roll 0 --pitch 0 --yaw 0 --frame-id map --child-frame-id odom".split(' '),
         )
-    
+
     gnss_transform_node = launch_ros.actions.Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         name='gnss_transform',
         output='screen',
-        arguments = "--x 0 --y 0 --z 0.5 --roll 0 --pitch 0 --yaw 0 --frame-id base_link --child-frame-id vehicle_blue/gnss/navsat".split(' '),
+        arguments = "--x 0 --y 0 --z 1.0 --roll 0 --pitch 0 --yaw 0 --frame-id base_link --child-frame-id gnss_link".split(' '),
         )
 
 
@@ -47,9 +47,9 @@ def generate_launch_description():
         executable='static_transform_publisher',
         name='imu_transform',
         output='screen',
-        arguments = "--x 0 --y 0 --z 0.25 --roll 0 --pitch 0 --yaw 0 --frame-id base_link --child-frame-id vehicle_blue/imu/imu".split(' '),
+        arguments = "--x 0 --y 0 --z 0.5 --roll 0 --pitch 0 --yaw 0 --frame-id base_link --child-frame-id imu_link".split(' '),
         )
-    
+
 
     navsat_transform_node = launch_ros.actions.Node(
         package='robot_localization',
@@ -66,23 +66,6 @@ def generate_launch_description():
             "publish_filtered_gps": False,
             "broadcast_utm_transform": False,
         }])
-    
-
-
-    # <param name="magnetic_declination_radians" value="0"/>
-    # <param name="yaw_offset" value="0"/>
-    # <param name="zero_altitude" value="true"/>
-
-    # <param name="use_odometry_yaw" value="false"/>
-    # <param name="wait_for_datum" value="false"/>
-   
-    # <param name="publish_filtered_gps" value="true"/>
-    # <param name="broadcast_utm_transform" value="false"/>
-    
-    # <remap from="/imu/data" to="/imu" />
-    # <remap from="/gps/fix" to="/fix" />
-    # <remap from="/odometry/filtered" to="/odometry/filtered" />
-
 
 
     ukf_localization_node = launch_ros.actions.Node(

@@ -27,12 +27,12 @@ services:
     image: ghcr.io/rosblox/ros-robot-localization:humble
     volumes:
       - ./robot_localization/robot_localization.launch.py:/opt/ros/humble/share/robot_localization/launch/ukf.launch.py
-      - ./robot_localization/gps_imu_localization.yaml:/opt/ros/humble/share/robot_localization/params/ukf.yaml
+      - ./robot_localization/ukf.yaml:/opt/ros/humble/share/robot_localization/params/ukf.yaml
     restart: always
     network_mode: "host"
     ipc: host
     pid: host
-    environment: 
+    environment:
       - UID=1000
       - GID=1000
     command: "su - ros /run.sh"
